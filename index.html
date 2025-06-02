@@ -1,2 +1,1071 @@
-we understand you need us
-we will be back soon 
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pacote Vermelho da Sorte</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Montserrat:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #FF4E4E;
+            --secondary-color: #FF2D2D;
+            --accent-color: #FFD700;
+            --dark-color: #2A2D3B;
+            --light-color: #F9F9F9;
+            --success-color: #4CAF50;
+            --gold-light: #FFE55C;
+            --gold-dark: #FFB400;
+            --shadow: 0 10px 20px rgba(0,0,0,0.1);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #FFF5F5 0%, #FFEEEE 100%);
+            color: var(--dark-color);
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            position: relative;
+            z-index: 1;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 25px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 150px;
+            height: 150px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+        }
+        
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: -30px;
+            left: -30px;
+            width: 100px;
+            height: 100px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+        }
+        
+        .logo {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 2;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .balance-container {
+            background: rgba(0,0,0,0.2);
+            padding: 18px;
+            border-radius: 15px;
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(5px);
+            position: relative;
+            z-index: 2;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .balance-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .balance-amount {
+            font-size: 24px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        
+        .recharge-btn {
+            background: linear-gradient(to right, var(--accent-color), var(--gold-light));
+            color: var(--dark-color);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 4px 10px rgba(255, 214, 0, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .recharge-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(255, 214, 0, 0.4);
+        }
+        
+        .recharge-btn::before {
+            content: '+';
+            font-weight: bold;
+        }
+        
+        .game-title {
+            text-align: center;
+            padding: 20px;
+            font-size: 20px;
+            color: var(--dark-color);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            position: relative;
+        }
+        
+        .game-title::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(to right, var(--primary-color), var(--accent-color));
+            border-radius: 3px;
+        }
+        
+        .red-packets-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            padding: 25px;
+        }
+        
+        .red-packet {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            border-radius: 15px;
+            height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+        
+        .red-packet:hover {
+            transform: translateY(-8px) scale(1.03);
+            box-shadow: 0 15px 25px rgba(255, 78, 78, 0.3);
+        }
+        
+        .red-packet::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 25px;
+            background: rgba(0,0,0,0.1);
+            border-bottom: 2px solid rgba(255,255,255,0.2);
+        }
+        
+        .red-packet::after {
+            content: '福';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 40px;
+            opacity: 0.1;
+            color: white;
+        }
+        
+        .red-packet-price {
+            font-size: 22px;
+            font-weight: bold;
+            margin-top: 20px;
+            position: relative;
+            z-index: 2;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .red-packet-value {
+            font-size: 14px;
+            opacity: 0.9;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            backdrop-filter: blur(5px);
+        }
+        
+        .modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .modal-content {
+            background-color: white;
+            border-radius: 25px;
+            width: 90%;
+            max-width: 400px;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            transform: translateY(50px) scale(0.9);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+        
+        .modal.active .modal-content {
+            transform: translateY(0) scale(1);
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+            transition: var(--transition);
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+        
+        .close-modal:hover {
+            background-color: #f5f5f5;
+            color: #666;
+        }
+        
+        .modal-title {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-size: 24px;
+            font-weight: 600;
+        }
+        
+        .modal-packet {
+            width: 180px;
+            height: 240px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            margin: 0 auto 25px;
+            border-radius: 15px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 10px 20px rgba(255, 78, 78, 0.3);
+            border: 3px solid rgba(255,255,255,0.4);
+        }
+        
+        .modal-packet::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 35px;
+            background: rgba(0,0,0,0.1);
+            border-bottom: 3px solid rgba(255,255,255,0.3);
+        }
+        
+        .modal-packet::after {
+            content: '福';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 60px;
+            opacity: 0.15;
+            color: white;
+        }
+        
+        .modal-packet-price {
+            color: white;
+            font-size: 32px;
+            font-weight: bold;
+            margin-top: 40px;
+            position: relative;
+            z-index: 2;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .confirm-btn {
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: var(--transition);
+            box-shadow: 0 5px 15px rgba(255, 78, 78, 0.4);
+            width: 100%;
+            font-size: 16px;
+            letter-spacing: 0.5px;
+        }
+        
+        .confirm-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 78, 78, 0.5);
+        }
+        
+        .result-modal .modal-content {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            border: 3px solid rgba(255,255,255,0.3);
+        }
+        
+        .result-amount {
+            font-size: 60px;
+            font-weight: bold;
+            margin: 30px 0;
+            color: var(--accent-color);
+            text-shadow: 0 3px 6px rgba(0,0,0,0.3);
+            font-family: 'Montserrat', sans-serif;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .result-amount::before {
+            content: 'R$';
+            font-size: 24px;
+            position: absolute;
+            left: -40px;
+            top: 15px;
+            color: white;
+        }
+        
+        .result-label {
+            font-size: 22px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        .confetti {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background-color: var(--accent-color);
+            opacity: 0;
+            border-radius: 50%;
+        }
+        
+        .history-btn {
+            display: block;
+            width: calc(100% - 50px);
+            margin: 0 auto 25px;
+            padding: 15px;
+            background: linear-gradient(to right, var(--dark-color), #3A3E50);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 5px 15px rgba(42, 45, 59, 0.3);
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .history-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(42, 45, 59, 0.4);
+        }
+        
+        .history-btn::before {
+            content: '📋';
+            font-size: 18px;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .pulse {
+            animation: pulse 0.8s infinite;
+        }
+        
+        @keyframes countdown {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(1.8); opacity: 0; }
+        }
+        
+        .countdown {
+            font-size: 100px;
+            font-weight: bold;
+            color: var(--accent-color);
+            animation: countdown 1s forwards;
+            text-shadow: 0 5px 15px rgba(255, 215, 0, 0.5);
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .spinning {
+            animation: spin 0.5s linear infinite;
+        }
+        
+        .vip {
+            border: 2px solid var(--accent-color);
+            box-shadow: 0 10px 20px rgba(255, 215, 0, 0.3);
+        }
+        
+        .vip::before {
+            background: linear-gradient(to right, rgba(255,215,0,0.3), rgba(255,215,0,0.1));
+        }
+        
+        .floating-coins {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .coin {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle at center, var(--gold-light) 0%, var(--gold-dark) 100%);
+            border-radius: 50%;
+            opacity: 0;
+            animation: float-up 2s forwards;
+        }
+        
+        @keyframes float-up {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+        
+        .ribbon {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 60px;
+            height: 60px;
+            overflow: hidden;
+            z-index: 3;
+        }
+        
+        .ribbon span {
+            position: absolute;
+            display: block;
+            width: 100px;
+            padding: 8px 0;
+            background-color: var(--accent-color);
+            color: var(--dark-color);
+            font-size: 12px;
+            font-weight: bold;
+            text-align: center;
+            right: -25px;
+            top: 15px;
+            transform: rotate(45deg);
+            box-shadow: 0 3px 5px rgba(0,0,0,0.2);
+        }
+        
+        .glow {
+            position: relative;
+        }
+        
+        .glow::after {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            border-radius: 20px;
+            background: linear-gradient(45deg, 
+                var(--primary-color), 
+                var(--accent-color), 
+                var(--secondary-color), 
+                var(--accent-color));
+            background-size: 400% 400%;
+            z-index: -1;
+            filter: blur(10px);
+            opacity: 0;
+            transition: var(--transition);
+            animation: gradientGlow 3s ease infinite;
+        }
+        
+        .glow:hover::after {
+            opacity: 0.7;
+        }
+        
+        @keyframes gradientGlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        @media (max-width: 480px) {
+            .red-packets-grid {
+                gap: 15px;
+                padding: 20px;
+            }
+            
+            .red-packet {
+                height: 100px;
+            }
+            
+            .modal-content {
+                padding: 25px;
+            }
+            
+            .modal-packet {
+                width: 160px;
+                height: 220px;
+            }
+        }
+        
+        /* Additional styles for history items */
+        .history-item {
+            transition: var(--transition);
+        }
+        
+        .history-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+        }
+        
+        .history-profit {
+            color: var(--success-color);
+            font-weight: 600;
+        }
+        
+        .history-loss {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">Pacote Vermelho da Sorte</div>
+            <div class="balance-container">
+                <div>
+                    <div class="balance-label">Seu Saldo</div>
+                    <div class="balance-amount">R$ <span id="userBalance">0.00</span></div>
+                </div>
+                <button class="recharge-btn" id="rechargeBtn">Recarregar</button>
+            </div>
+        </header>
+        
+        <div class="game-title">Escolha seu Pacote Vermelho</div>
+        
+        <div class="red-packets-grid" id="redPacketsGrid">
+            <!-- Red packets will be generated by JavaScript -->
+        </div>
+        
+        <button class="history-btn" id="historyBtn">Histórico de Jogos</button>
+    </div>
+    
+    <!-- Purchase Confirmation Modal -->
+    <div class="modal" id="confirmModal">
+        <div class="modal-content">
+            <span class="close-modal">×</span>
+            <h2 class="modal-title">Confirmar Compra</h2>
+            <div class="modal-packet" id="confirmPacket">
+                <div class="modal-packet-price" id="confirmPacketPrice">R$ 10</div>
+            </div>
+            <p>Você está prestes a comprar este pacote vermelho.</p>
+            <p>Saldo disponível: R$ <span id="confirmBalance">0.00</span></p>
+            <button class="confirm-btn" id="confirmPurchase">Confirmar Compra</button>
+        </div>
+    </div>
+    
+    <!-- Result Modal -->
+    <div class="modal result-modal" id="resultModal">
+        <div class="modal-content">
+            <span class="close-modal">×</span>
+            <h2 class="result-label">Parabéns!</h2>
+            <div class="result-amount" id="resultAmount">15.00</div>
+            <p>Você ganhou!</p>
+            <div id="confettiContainer"></div>
+            <div class="floating-coins" id="floatingCoins"></div>
+        </div>
+    </div>
+    
+    <!-- Recharge Modal -->
+    <div class="modal" id="rechargeModal">
+        <div class="modal-content">
+            <span class="close-modal">×</span>
+            <h2 class="modal-title">Recarregar Saldo</h2>
+            <p>Escolha o valor para recarregar:</p>
+            <div style="margin: 25px 0;">
+                <select id="rechargeAmount" style="padding: 12px; width: 100%; border-radius: 10px; border: 2px solid #eee; font-size: 16px; background-color: #f9f9f9;">
+                    <option value="10">R$ 10,00</option>
+                    <option value="20">R$ 20,00</option>
+                    <option value="50">R$ 50,00</option>
+                    <option value="100">R$ 100,00</option>
+                    <option value="200">R$ 200,00</option>
+                </select>
+            </div>
+            <button class="confirm-btn" id="proceedToPayment">Pagar com PIX</button>
+        </div>
+    </div>
+    
+    <!-- Countdown Modal -->
+    <div class="modal" id="countdownModal">
+        <div class="modal-content" style="background-color: var(--dark-color); color: white; border: 3px solid rgba(255,255,255,0.2);">
+            <div class="countdown" id="countdownNumber">3</div>
+        </div>
+    </div>
+    
+    <script>
+        // Game data
+        const redPackets = [
+            { id: 1, price: 1, minReward: 0.5, maxReward: 2, vip: false },
+            { id: 2, price: 3, minReward: 1, maxReward: 6, vip: false },
+            { id: 3, price: 5, minReward: 2, maxReward: 10, vip: false },
+            { id: 4, price: 10, minReward: 5, maxReward: 20, vip: false },
+            { id: 5, price: 20, minReward: 10, maxReward: 40, vip: true },
+            { id: 6, price: 50, minReward: 20, maxReward: 100, vip: true },
+            { id: 7, price: 100, minReward: 50, maxReward: 200, vip: true },
+            { id: 8, price: 200, minReward: 100, maxReward: 400, vip: true },
+            { id: 9, price: 500, minReward: 200, maxReward: 1000, vip: true }
+        ];
+
+        // User data
+        let userBalance = 0;
+        let selectedPacket = null;
+        let gameHistory = [];
+
+        // DOM elements
+        const redPacketsGrid = document.getElementById('redPacketsGrid');
+        const userBalanceEl = document.getElementById('userBalance');
+        const confirmModal = document.getElementById('confirmModal');
+        const resultModal = document.getElementById('resultModal');
+        const rechargeModal = document.getElementById('rechargeModal');
+        const countdownModal = document.getElementById('countdownModal');
+        const confirmPacketPrice = document.getElementById('confirmPacketPrice');
+        const confirmBalance = document.getElementById('confirmBalance');
+        const resultAmount = document.getElementById('resultAmount');
+        const confettiContainer = document.getElementById('confettiContainer');
+        const floatingCoins = document.getElementById('floatingCoins');
+        const countdownNumber = document.getElementById('countdownNumber');
+
+        // Initialize the app
+        function init() {
+            renderRedPackets();
+            setupEventListeners();
+            
+            // Load user balance from localStorage
+            const savedBalance = localStorage.getItem('redPacketBalance');
+            if (savedBalance) {
+                userBalance = parseFloat(savedBalance);
+                updateBalanceDisplay();
+            }
+            
+            // Load game history from localStorage
+            const savedHistory = localStorage.getItem('redPacketHistory');
+            if (savedHistory) {
+                gameHistory = JSON.parse(savedHistory);
+            }
+            
+            // Add demo balance for first-time users
+            if (!savedBalance && gameHistory.length === 0) {
+                userBalance = 10;
+                updateBalanceDisplay();
+            }
+        }
+
+        // Update balance display and save to localStorage
+        function updateBalanceDisplay() {
+            userBalanceEl.textContent = userBalance.toFixed(2);
+            localStorage.setItem('redPacketBalance', userBalance.toFixed(2));
+        }
+
+        // Save game history to localStorage
+        function saveGameHistory() {
+            localStorage.setItem('redPacketHistory', JSON.stringify(gameHistory));
+        }
+
+        // Render red packets grid with enhanced visuals
+        function renderRedPackets() {
+            redPacketsGrid.innerHTML = '';
+            
+            redPackets.forEach(packet => {
+                const packetEl = document.createElement('div');
+                packetEl.className = `red-packet ${packet.vip ? 'vip glow' : ''}`;
+                packetEl.dataset.id = packet.id;
+                
+                packetEl.innerHTML = `
+                    <div class="red-packet-price">R$ ${packet.price.toFixed(2)}</div>
+                    <div class="red-packet-value">Pacote ${packet.id}</div>
+                `;
+                
+                if (packet.vip && packet.price >= 100) {
+                    const ribbon = document.createElement('div');
+                    ribbon.className = 'ribbon';
+                    ribbon.innerHTML = '<span>VIP</span>';
+                    packetEl.appendChild(ribbon);
+                }
+                
+                redPacketsGrid.appendChild(packetEl);
+            });
+
+            // Re-attach event listeners for newly created packets
+            document.querySelectorAll('.red-packet').forEach(packet => {
+                packet.addEventListener('click', handlePacketSelection);
+            });
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Modal close buttons
+            document.querySelectorAll('.close-modal').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.modal').forEach(modal => {
+                        modal.classList.remove('active');
+                    });
+                });
+            });
+            
+            // Confirm purchase button
+            document.getElementById('confirmPurchase').addEventListener('click', confirmPurchase);
+            
+            // Recharge button
+            document.getElementById('rechargeBtn').addEventListener('click', () => {
+                rechargeModal.classList.add('active');
+            });
+            
+            // Proceed to payment button
+            document.getElementById('proceedToPayment').addEventListener('click', proceedToPayment);
+            
+            // History button
+            document.getElementById('historyBtn').addEventListener('click', showHistory);
+        }
+
+        // Handle red packet selection
+        function handlePacketSelection(e) {
+            const packetId = parseInt(e.currentTarget.dataset.id);
+            selectedPacket = redPackets.find(p => p.id === packetId);
+            
+            if (selectedPacket) {
+                confirmPacketPrice.textContent = `R$ ${selectedPacket.price.toFixed(2)}`;
+                confirmBalance.textContent = userBalance.toFixed(2);
+                confirmModal.classList.add('active');
+            } else {
+                console.error('Selected packet not found');
+            }
+        }
+
+        // Confirm purchase
+        function confirmPurchase() {
+            if (!selectedPacket) {
+                console.error('No packet selected');
+                return;
+            }
+            
+            if (userBalance >= selectedPacket.price) {
+                confirmModal.classList.remove('active');
+                startCountdown();
+            } else {
+                alert('Saldo insuficiente. Por favor, recarregue seu saldo.');
+                confirmModal.classList.remove('active');
+                rechargeModal.classList.add('active');
+            }
+        }
+
+        // Start countdown before revealing result
+        function startCountdown() {
+            countdownModal.classList.add('active');
+            let count = 3;
+            
+            countdownNumber.textContent = count;
+            countdownNumber.classList.add('pulse');
+            
+            const countdownInterval = setInterval(() => {
+                count--;
+                countdownNumber.textContent = count;
+                
+                if (count <= 0) {
+                    clearInterval(countdownInterval);
+                    countdownNumber.classList.remove('pulse');
+                    countdownModal.classList.remove('active');
+                    revealResult();
+                }
+            }, 1000);
+        }
+
+        // Reveal the result with enhanced animations
+        function revealResult() {
+            if (!selectedPacket) {
+                console.error('No packet selected for result');
+                return;
+            }
+            
+            // Deduct the price from balance
+            userBalance -= selectedPacket.price;
+            updateBalanceDisplay();
+            
+            // Calculate random reward
+            const reward = calculateReward(selectedPacket);
+            
+            // Add to game history
+            const gameResult = {
+                packetId: selectedPacket.id,
+                price: selectedPacket.price,
+                reward: reward,
+                date: new Date().toISOString()
+            };
+            
+            gameHistory.unshift(gameResult);
+            saveGameHistory();
+            
+            // Show result
+            resultAmount.textContent = reward.toFixed(2);
+            resultModal.classList.add('active');
+            
+            // Add confetti and coins for rewards
+            if (reward >= selectedPacket.price * 2) {
+                createConfetti();
+                createFloatingCoins(30);
+            } else if (reward > selectedPacket.price) {
+                createFloatingCoins(15);
+            }
+            
+            // Update balance with reward
+            setTimeout(() => {
+                userBalance += reward;
+                updateBalanceDisplay();
+            }, 1500);
+        }
+
+        // Calculate random reward with adjusted probabilities
+        function calculateReward(packet) {
+            const min = packet.minReward;
+            const max = packet.maxReward;
+            const base = min + Math.random() * (max - min);
+            
+            // Apply multiplier based on random chance
+            let multiplier = 1;
+            const rand = Math.random();
+            
+            if (rand < 0.6) {
+                multiplier = 1 + Math.random() * 0.5; // 60% chance: 1x-1.5x
+            } else if (rand < 0.85) {
+                multiplier = 1.5 + Math.random() * 0.5; // 25% chance: 1.5x-2x
+            } else if (rand < 0.95) {
+                multiplier = 2 + Math.random(); // 10% chance: 2x-3x
+            } else {
+                multiplier = 3 + Math.random() * 2; // 5% chance: 3x-5x
+            }
+            
+            // Ensure reward is within bounds
+            let reward = base * multiplier;
+            reward = Math.max(min, Math.min(max, reward));
+            
+            return parseFloat(reward.toFixed(2));
+        }
+
+        // Create confetti effect
+        function createConfetti() {
+            confettiContainer.innerHTML = '';
+            
+            for (let i = 0; i < 80; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = `${Math.random() * 100}%`;
+                confetti.style.top = `${Math.random() * 100}%`;
+                confetti.style.backgroundColor = getRandomColor();
+                confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+                confetti.style.width = `${8 + Math.random() * 8}px`;
+                confetti.style.height = confetti.style.width;
+                
+                confettiContainer.appendChild(confetti);
+                
+                // Animate confetti
+                setTimeout(() => {
+                    confetti.style.opacity = '1';
+                    confetti.style.transition = `all ${3 + Math.random() * 2}s cubic-bezier(0.1, 0.8, 0.3, 1)`;
+                    confetti.style.transform = `translate(${(Math.random() - 0.5) * 300}px, ${150 + Math.random() * 100}px) rotate(${Math.random() * 720}deg)`;
+                    confetti.style.opacity = '0';
+                }, 0);
+            }
+        }
+
+        // Create floating coins animation
+        function createFloatingCoins(count) {
+            floatingCoins.innerHTML = '';
+            
+            for (let i = 0; i < count; i++) {
+                const coin = document.createElement('div');
+                coin.className = 'coin';
+                coin.style.left = `${50 + (Math.random() - 0.5) * 30}%`;
+                coin.style.top = '80%';
+                coin.style.animationDelay = `${i * 0.1}s`;
+                coin.style.opacity = '0';
+                
+                floatingCoins.appendChild(coin);
+                
+                // Trigger animation
+                setTimeout(() => {
+                    coin.style.opacity = '1';
+                }, 10);
+            }
+        }
+
+        // Get random color for confetti
+        function getRandomColor() {
+            const colors = ['var(--accent-color)', '#FF4E4E', '#4ECDC4', '#A78BFA', '#F87171'];
+            return colors[Math.floor(Math.random() * colors.length)];
+        }
+
+        // Proceed to payment (simulated)
+        function proceedToPayment() {
+            const amount = parseFloat(document.getElementById('rechargeAmount').value);
+            
+            // Show processing animation
+            const btn = document.getElementById('proceedToPayment');
+            btn.innerHTML = 'Processando...';
+            btn.disabled = true;
+            
+            // Simulate payment processing
+            setTimeout(() => {
+                userBalance += amount;
+                updateBalanceDisplay();
+                rechargeModal.classList.remove('active');
+                
+                // Show success animation
+                createFloatingCoins(20);
+                
+                // Reset button
+                setTimeout(() => {
+                    btn.innerHTML = 'Pagar com PIX';
+                    btn.disabled = false;
+                }, 1000);
+            }, 2000);
+        }
+
+        // Show game history in a modal
+        function showHistory() {
+            if (gameHistory.length === 0) {
+                alert('Você ainda não tem histórico de jogos.');
+                return;
+            }
+            
+            // Create a modal for history
+            const historyModal = document.createElement('div');
+            historyModal.className = 'modal active';
+            historyModal.innerHTML = `
+                <div class="modal-content" style="max-height: 80vh; overflow-y: auto;">
+                    <span class="close-modal" id="closeHistory">×</span>
+                    <h2 class="modal-title">Seu Histórico</h2>
+                    <div id="historyItems" style="margin-top: 20px;"></div>
+                </div>
+            `;
+            
+            document.body.appendChild(historyModal);
+            
+            // Add close event
+            document.getElementById('closeHistory').addEventListener('click', () => {
+                historyModal.classList.remove('active');
+                setTimeout(() => historyModal.remove(), 400);
+            });
+            
+            // Populate history items
+            const historyItems = document.getElementById('historyItems');
+            gameHistory.slice(0, 20).forEach((game, index) => {
+                const date = new Date(game.date);
+                const profit = game.reward - game.price;
+                const profitClass = profit >= 0 ? 'history-profit' : 'history-loss';
+                
+                const item = document.createElement('div');
+                item.className = 'history-item';
+                item.style.padding = '15px';
+                item.style.marginBottom = '10px';
+                item.style.background = '#f9f9f9';
+                item.style.borderRadius = '10px';
+                item.style.display = 'flex';
+                item.style.justifyContent = 'space-between';
+                item.style.alignItems = 'center';
+                
+                item.innerHTML = `
+                    <div style="flex: 1;">
+                        <div style="font-weight: 600; color: var(--dark-color);">Pacote ${game.packetId}</div>
+                        <div style="font-size: 14px; color: #666; margin-top: 5px;">
+                            ${date.toLocaleDateString('pt-BR')} ${date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
+                        </div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-size: 14px; color: #666;">Custo: R$ ${game.price.toFixed(2)}</div>
+                        <div style="font-size: 14px; margin-top: 5px;">Prêmio: R$ ${game.reward.toFixed(2)}</div>
+                        <div class="${profitClass}" style="margin-top: 5px;">
+                            ${profit >= 0 ? '+' : ''}R$ ${profit.toFixed(2)}
+                        </div>
+                    </div>
+                `;
+                
+                historyItems.appendChild(item);
+            });
+        }
+
+        // Initialize the application
+        init();
+    </script>
+</body>
+</html>
