@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danvil AI Assistant</title>
+    <!-- Include Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <!-- Include Marked.js for markdown rendering -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- Include Highlight.js for code syntax highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+        }
+
+        body {
+            background: #1a1a1a;
+            color: #e6e6e6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 800px;
+            margin-bottom: 20px;
+            padding: 0 10px;
+        }
+
+        .header-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #ffffff;
+            letter-spacing: -0.02em;
+        }
+
+        .header .icons {
+            display: flex;
+            gap: 20px;
+        }
+
+        .header .icons i {
+            font-size: 18px;
+            color: #b0b0b0;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .header .icons i:hover {
+            color: #00aaff;
+        }
+
+        .content {
+            flex-grow: 1;
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .welcome-message {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .welcome-message .logo {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 15px;
+            object-fit: cover;
+            background-color: #1a1a1a;
+            border-radius: 20%;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .welcome-message h2 {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #ffffff;
+            letter-spacing: -0.03em;
+        }
+
+        .welcome-message p {
+            font-size: 18px;
+            color: #b0b0b0;
+            max-width: 500px;
+            line-height: 1.5;
+        }
+
+        .results-container {
+            width: 100%;
+            max-width: 800px;
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            overflow-x: hidden;
+        }
+
+        .result-box {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            max-width: 85%;
+            position: relative;
+        }
+
+        .result-box.user {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+
+        .result-box.user .message-content {
+            background: linear-gradient(135deg, #00aaff, #007bff);
+            color: #ffffff;
+            border-radius: 12px 12px 2px 12px;
+            padding: 12px 18px;
+            line-height: 1.5;
+            word-break: break-word;
+            overflow-wrap: anywhere;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .result-box.ai {
+            align-self: flex-start;
+        }
+
+        .result-box.ai .message-content {
+            background: #2a2a2a;
+            color: #e6e6e6;
+            border-radius: 12px 12px 12px 2px;
+            padding: 12px 18px;
+            line-height: 1.5;
+            word-break: break-word;
+            overflow-wrap: anywhere;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .result-box.ai .ai-logo {
+            width: 28px;
+            height: 28px;
+            margin-right: 12px;
+            object-fit: cover;
+            border-radius: 20%;
+        }
+
+        .result-box h3 {
+            display: none;
+        }
+
+        .ai-response {
+            margin-top: 0;
+        }
+
+        .ai-response p {
+            margin-bottom: 12px;
+        }
+
+        .ai-response ul, .ai-response ol {
+            margin-left: 25px;
+            margin-bottom: 12px;
+        }
+
+        .ai-response li {
+            margin-bottom: 8px;
+        }
+
+        .ai-response code {
+            background-color: #3a3a3a;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9em;
+        }
+
+        .ai-response pre {
+            background-color: #3a3a3a;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin-bottom: 12px;
+        }
+
+        .action-icons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 10px;
+            padding: 0 18px 5px 0;
+        }
+
+        .copy-btn, .like-btn, .dislike-btn, .pause-btn {
+            font-size: 16px;
+            color: #b0b0b0;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .copy-btn:hover, .like-btn:hover, .dislike-btn:hover, .pause-btn:hover {
+            color: #00aaff;
+        }
+
+        .copy-btn.copied {
+            color: #00cc00;
+        }
+
+        .like-btn.liked {
+            color: #00cc00;
+        }
+
+        .dislike-btn.disliked {
+            color: #ff4d4d;
+        }
+
+        .pause-btn.paused {
+            color: #ff4d4d;
+        }
+
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .typing-dot {
+            width: 10px;
+            height: 10px;
+            background-color: #00aaff;
+            border-radius: 50%;
+            opacity: 0.5;
+            animation: typingAnimation 1s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) { animation-delay: 0s; }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typingAnimation {
+            0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
+            30% { transform: translateY(-5px); opacity: 1; }
+        }
+
+        .input-container {
+            width: 100%;
+            max-width: 800px;
+            position: sticky;
+            bottom: 20px;
+            z-index: 90;
+        }
+
+        .input-section {
+            background: #2a2a2a;
+            border-radius: 12px;
+            padding: 12px 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .input-section:hover {
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+        }
+
+        .input-section textarea {
+            background: none;
+            border: none;
+            color: #e6e6e6;
+            font-size: 16px;
+            flex-grow: 1;
+            padding: 8px 12px;
+            outline: none;
+            resize: none;
+            height: 44px;
+            width: 100%;
+            font-family: 'Inter', sans-serif;
+            max-height: 120px;
+            overflow-y: auto;
+            word-break: break-word;
+            overflow-wrap: anywhere;
+        }
+
+        .input-section textarea::placeholder {
+            color: #606060;
+        }
+
+        .input-section .icons {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .input-section .icons i {
+            font-size: 18px;
+            color: #b0b0b0;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .input-section .icons i:hover {
+            color: #00aaff;
+        }
+
+        .input-section .icons .send-btn {
+            color: #00aaff;
+        }
+
+        .error-message {
+            color: #ff4d4d;
+            font-size: 14px;
+            margin-top: 8px;
+            display: none;
+            text-align: center;
+        }
+
+        .model-selector {
+            position: absolute;
+            bottom: 100%;
+            right: 0;
+            background: #2a2a2a;
+            border-radius: 10px;
+            padding: 12px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+            width: 220px;
+            margin-bottom: 12px;
+            z-index: 110;
+        }
+
+        .model-selector.active {
+            display: flex;
+        }
+
+        .model-option {
+            padding: 10px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: background-color 0.3s ease;
+        }
+
+        .model-option:hover {
+            background-color: #3a3a3a;
+        }
+
+        .model-option i {
+            color: #00aaff;
+            font-size: 16px;
+        }
+
+        .model-option .model-name {
+            flex-grow: 1;
+            font-weight: 600;
+            font-size: 14px;
+            color: #ffffff;
+        }
+
+        .model-option .model-desc {
+            font-size: 12px;
+            color: #b0b0b0;
+        }
+
+        .chat-history {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #1a1a1a;
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .chat-history.active {
+            display: flex;
+        }
+
+        .chat-history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .chat-history-header h3 {
+            font-size: 22px;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .chat-history-close {
+            font-size: 20px;
+            cursor: pointer;
+            color: #b0b0b0;
+            transition: color 0.3s ease;
+        }
+
+        .chat-history-close:hover {
+            color: #ff4d4d;
+        }
+
+        .history-item {
+            padding: 12px 15px;
+            margin-bottom: 12px;
+            background: #2a2a2a;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .history-item:hover {
+            background: #3a3a3a;
+        }
+
+        .history-item strong {
+            font-size: 16px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-right: 8px;
+        }
+
+        .history-item small {
+            font-size: 12px;
+            color: #b0b0b0;
+        }
+
+        .settings-panel {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #1a1a1a;
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .settings-panel.active {
+            display: flex;
+        }
+
+        .settings-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .settings-header h3 {
+            font-size: 22px;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .settings-close {
+            font-size: 20px;
+            cursor: pointer;
+            color: #b0b0b0;
+            transition: color 0.3s ease;
+        }
+
+        .settings-close:hover {
+            color: #ff4d4d;
+        }
+
+        .settings-option {
+            padding: 12px 15px;
+            margin-bottom: 12px;
+            background: #2a2a2a;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .settings-option span {
+            font-size: 16px;
+            color: #ffffff;
+            font-weight: 500;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #3a3a3a;
+            transition: .3s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background: #ffffff;
+            transition: .3s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background: #00aaff;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(20px);
+        }
+
+        .loading-spinner {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 48px;
+            height: 48px;
+            border: 5px solid #00aaff;
+            border-top: 5px solid transparent;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            z-index: 1000;
+        }
+
+        .loading-spinner.active {
+            display: block;
+        }
+
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .header-title {
+                font-size: 18px;
+            }
+
+            .welcome-message h2 {
+                font-size: 28px;
+            }
+
+            .welcome-message p {
+                font-size: 16px;
+            }
+
+            .input-section {
+                padding: 10px 12px;
+            }
+
+            .input-section textarea {
+                font-size: 14px;
+            }
+
+            .result-box {
+                max-width: 90%;
+            }
+
+            .model-selector {
+                width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-title">Danvil AI</div>
+        <div class="icons" aria-label="Header navigation">
+            <i class="fas fa-history" id="history-btn" title="Chat History"></i>
+            <i class="fas fa-cog" id="settings-btn" title="Settings"></i>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="welcome-message">
+            <img src="https://raw.githubusercontent.com/danvil33/Danvil-AI-/refs/heads/main/images%20(9).jpeg" alt="Danvil AI Logo" class="logo">
+            <h2>Hello, I'm Danvil</h2>
+            <p>Ask me anything, and I'll provide clear, concise answers to help you explore the universe!</p>
+        </div>
+        <div class="results-container"></div>
+    </div>
+
+    <div class="input-container">
+        <div class="model-selector" id="model-selector">
+            <div class="model-option" data-model="danvil-pro">
+                <i class="fas fa-brain"></i>
+                <div>
+                    <div class="model-name">Danvil Pro</div>
+                    <div class="model-desc">Advanced reasoning & insights</div>
+                </div>
+            </div>
+            <div class="model-option" data-model="danvil-fast">
+                <i class="fas fa-globe"></i>
+                <div>
+                    <div class="model-name">Danvil Search</div>
+                    <div class="model-desc">Web-enhanced answers</div>
+                </div>
+            </div>
+            <div class="model-option" data-model="danvil-claude">
+                <i class="fas fa-plus"></i>
+                <div>
+                    <div class="model-name">More Options</div>
+                    <div class="model-desc">Explore additional features</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="input-section">
+            <textarea id="user-input" placeholder="Ask Danvil anything..." aria-label="Message Danvil" maxlength="1000"></textarea>
+            <div class="icons">
+                <i class="fas fa-microphone" id="mic-btn" title="Voice input"></i>
+                <i class="fas fa-brain" id="model-btn" title="Select Mode"></i>
+                <i class="fas fa-arrow-up send-btn" id="send-btn" title="Send"></i>
+            </div>
+        </div>
+        <div class="error-message" id="error-message">Input is too long (max 1000 characters).</div>
+    </div>
+
+    <div class="chat-history" id="chat-history">
+        <div class="chat-history-header">
+            <h3>Chat History</h3>
+            <i class="fas fa-times chat-history-close" id="history-close"></i>
+        </div>
+        <div class="history-items"></div>
+    </div>
+
+    <div class="settings-panel" id="settings-panel">
+        <div class="settings-header">
+            <h3>Settings</h3>
+            <i class="fas fa-times settings-close" id="settings-close"></i>
+        </div>
+
+        <div class="settings-option">
+            <span>Voice Responses</span>
+            <label class="toggle-switch">
+                <input type="checkbox" id="voice-toggle">
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <div class="settings-option">
+            <span>Auto-scroll</span>
+            <label class="toggle-switch">
+                <input type="checkbox" id="scroll-toggle" checked>
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <div class="settings-option">
+            <span>Clear Chat History</span>
+            <button id="clear-history" style="background: none; border: none; color: #ff4d4d; cursor: pointer;">
+                <i class="fas fa-trash"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="loading-spinner" id="loading-spinner"></div>
+
+    <script>
+        // Initialize variables
+        let currentModel = 'danvil-pro';
+        let chatHistory = JSON.parse(localStorage.getItem('danvilChatHistory')) || [];
+        let isTyping = false;
+        let isLoading = false;
+        let isPaused = false;
+        let typingInterval = null;
+        const cache = new Map();
+        const MAX_INPUT_LENGTH = 1000;
+
+        // DOM elements
+        const userInput = document.getElementById('user-input');
+        const sendBtn = document.getElementById('send-btn');
+        const micBtn = document.getElementById('mic-btn');
+        const modelBtn = document.getElementById('model-btn');
+        const modelSelector = document.getElementById('model-selector');
+        const resultsContainer = document.querySelector('.results-container');
+        const historyBtn = document.getElementById('history-btn');
+        const historyPanel = document.getElementById('chat-history');
+        const historyClose = document.getElementById('history-close');
+        const historyItems = document.querySelector('.history-items');
+        const settingsBtn = document.getElementById('settings-btn');
+        const settingsPanel = document.getElementById('settings-panel');
+        const settingsClose = document.getElementById('settings-close');
+        const voiceToggle = document.getElementById('voice-toggle');
+        const scrollToggle = document.getElementById('scroll-toggle');
+        const clearHistoryBtn = document.getElementById('clear-history');
+        const loadingSpinner = document.getElementById('loading-spinner');
+        const errorMessage = document.getElementById('error-message');
+
+        // Auto-resize textarea and validate length
+        function autoResizeTextarea() {
+            userInput.style.height = '44px';
+            userInput.style.height = `${Math.min(userInput.scrollHeight, 120)}px`;
+            if (userInput.value.length > MAX_INPUT_LENGTH) {
+                userInput.value = userInput.value.slice(0, MAX_INPUT_LENGTH);
+                errorMessage.style.display = 'block';
+            } else {
+                errorMessage.style.display = 'none';
+            }
+        }
+
+        userInput.addEventListener('input', autoResizeTextarea);
+
+        // Model selector toggle
+        modelBtn.addEventListener('click', () => {
+            modelSelector.classList.toggle('active');
+        });
+
+        // Model selection
+        document.querySelectorAll('.model-option').forEach(option => {
+            option.addEventListener('click', function() {
+                currentModel = this.getAttribute('data-model');
+                modelSelector.classList.remove('active');
+
+                const notification = document.createElement('div');
+                notification.className = 'result-box user';
+                notification.innerHTML = `
+                    <div class="message-content">
+                        <p>Mode Changed: Now using ${this.querySelector('.model-name').textContent}</p>
+                    </div>
+                `;
+                resultsContainer.appendChild(notification);
+                notification.scrollIntoView({ behavior: 'smooth' });
+
+                setTimeout(() => {
+                    notification.style.opacity = '0';
+                    setTimeout(() => notification.remove(), 300);
+                }, 3000);
+            });
+        });
+
+        // Close model selector when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!modelBtn.contains(e.target) && !modelSelector.contains(e.target)) {
+                modelSelector.classList.remove('active');
+            }
+        });
+
+        // Chat history panel
+        historyBtn.addEventListener('click', () => {
+            renderHistory();
+            historyPanel.classList.add('active');
+        });
+
+        historyClose.addEventListener('click', () => {
+            historyPanel.classList.remove('active');
+        });
+
+        // Settings panel
+        settingsBtn.addEventListener('click', () => {
+            settingsPanel.classList.add('active');
+        });
+
+        settingsClose.addEventListener('click', () => {
+            settingsPanel.classList.remove('active');
+        });
+
+        // Clear history
+        clearHistoryBtn.addEventListener('click', () => {
+            if (confirm('Are you sure you want to clear all chat history?')) {
+                chatHistory = [];
+                localStorage.setItem('danvilChatHistory', JSON.stringify(chatHistory));
+                resultsContainer.innerHTML = '';
+                renderHistory();
+            }
+        });
+
+        // Allow pressing Enter to submit
+        userInput.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter' && !event.shiftKey && !isTyping) {
+                event.preventDefault();
+                sendMessage();
+            }
+        });
+
+        // Click send button to send message
+        sendBtn.addEventListener('click', sendMessage);
+
+        // Function to send message
+        async function sendMessage() {
+            const message = userInput.value.trim();
+            if (!message) return;
+            if (message.length > MAX_INPUT_LENGTH) {
+                errorMessage.style.display = 'block';
+                return;
+            }
+
+            document.querySelector('.welcome-message').style.display = 'none';
+
+            addMessageToChat('You', message, 'user');
+            userInput.value = '';
+            autoResizeTextarea();
+
+            showTypingIndicator();
+            showLoadingSpinner();
+
+            try {
+                let response = await generateAIResponse(message);
+                hideTypingIndicator();
+                hideLoadingSpinner();
+
+                if (message.toLowerCase().includes('who created you') || message.toLowerCase().includes('who made you')) {
+                    response = `### Creator\n\nI am Danvil AI, created by Danvil, a student at MUST University.`;
+                }
+
+                typeResponse(response);
+            } catch (error) {
+                hideTypingIndicator();
+                hideLoadingSpinner();
+                addMessageToChat('Danvil', `### Error\n\n${error.message}. Try again.`, 'ai');
+            }
+        }
+
+        // Function to add message to chat
+        function addMessageToChat(sender, message, type) {
+            const messageId = 'msg-' + Date.now();
+            const messageBox = document.createElement('div');
+            messageBox.className = `result-box ${type}`;
+            messageBox.id = messageId;
+
+            if (type === 'user') {
+                messageBox.innerHTML = `
+                    <div class="message-content">
+                        <p>${message.replace(/\n/g, '<br>')}</p>
+                    </div>
+                `;
+            } else if (type === 'ai') {
+                const processedMessage = marked.parse(message);
+                messageBox.innerHTML = `
+                    <img src="https://raw.githubusercontent.com/danvil33/Danvil-AI-/refs/heads/main/images%20(9).jpeg" alt="Danvil AI Logo" class="ai-logo">
+                    <div class="message-content">
+                        <div class="ai-response">${processedMessage}</div>
+                        <div class="action-icons">
+                            <i class="fas fa-copy copy-btn" title="Copy Response"></i>
+                            <i class="fas fa-thumbs-up like-btn" title="Like"></i>
+                            <i class="fas fa-thumbs-down dislike-btn" title="Dislike"></i>
+                            <i class="fas fa-pause pause-btn" title="Pause/Resume"></i>
+                        </div>
+                    </div>
+                `;
+                const copyBtn = messageBox.querySelector('.copy-btn');
+                const likeBtn = messageBox.querySelector('.like-btn');
+                const dislikeBtn = messageBox.querySelector('.dislike-btn');
+                const pauseBtn = messageBox.querySelector('.pause-btn');
+
+                copyBtn.addEventListener('click', () => {
+                    navigator.clipboard.writeText(message).then(() => {
+                        copyBtn.classList.add('copied');
+                        copyBtn.classList.remove('fa-copy');
+                        copyBtn.classList.add('fa-check');
+                        setTimeout(() => {
+                            copyBtn.classList.remove('copied');
+                            copyBtn.classList.remove('fa-check');
+                            copyBtn.classList.add('fa-copy');
+                        }, 2000);
+                    });
+                });
+
+                likeBtn.addEventListener('click', () => {
+                    likeBtn.classList.toggle('liked');
+                    if (likeBtn.classList.contains('liked')) {
+                        dislikeBtn.classList.remove('disliked');
+                    }
+                });
+
+                dislikeBtn.addEventListener('click', () => {
+                    dislikeBtn.classList.toggle('disliked');
+                    if (dislikeBtn.classList.contains('disliked')) {
+                        likeBtn.classList.remove('liked');
+                    }
+                });
+
+                pauseBtn.addEventListener('click', () => {
+                    isPaused = !isPaused;
+                    pauseBtn.classList.toggle('paused', isPaused);
+                    pauseBtn.classList.toggle('fa-pause', !isPaused);
+                    pauseBtn.classList.toggle('fa-play', isPaused);
+                    pauseBtn.title = isPaused ? 'Resume' : 'Pause';
+                });
+
+                document.querySelectorAll('pre code').forEach((block) => {
+                    hljs.highlightElement(block);
+                });
+            }
+
+            resultsContainer.appendChild(messageBox);
+
+            if (scrollToggle.checked) {
+                messageBox.scrollIntoView({ behavior: 'smooth' });
+            }
+
+            if (type !== 'typing') {
+                chatHistory.push({
+                    id: messageId,
+                    sender,
+                    message,
+                    type,
+                    timestamp: new Date().toISOString(),
+                    model: type === 'ai' ? currentModel : null
+                });
+
+                localStorage.setItem('danvilChatHistory', JSON.stringify(chatHistory));
+            }
+
+            return messageBox;
+        }
+
+        // Function to show typing indicator
+        function showTypingIndicator() {
+            isTyping = true;
+            const typingBox = document.createElement('div');
+            typingBox.className = 'result-box ai';
+            typingBox.id = 'typing-indicator';
+            typingBox.innerHTML = `
+                <img src="https://raw.githubusercontent.com/danvil33/Danvil-AI-/refs/heads/main/images%20(9).jpeg" alt="Danvil AI Logo" class="ai-logo">
+                <div class="message-content">
+                    <div class="typing-indicator">
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                    </div>
+                </div>
+            `;
+            resultsContainer.appendChild(typingBox);
+
+            if (scrollToggle.checked) {
+                typingBox.scrollIntoView({ behavior: 'smooth' });
+            }
+
+            chatHistory.push({
+                id: 'typing-indicator',
+                sender: 'Danvil',
+                message: '...',
+                type: 'typing',
+                timestamp: new Date().toISOString()
+            });
+        }
+
+        // Function to hide typing indicator
+        function hideTypingIndicator() {
+            isTyping = false;
+            const typingBox = document.getElementById('typing-indicator');
+            if (typingBox) typingBox.remove();
+
+            chatHistory = chatHistory.filter(item => item.id !== 'typing-indicator');
+            localStorage.setItem('danvilChatHistory', JSON.stringify(chatHistory));
+        }
+
+        // Function to show loading spinner
+        function showLoadingSpinner() {
+            isLoading = true;
+            loadingSpinner.classList.add('active');
+        }
+
+        // Function to hide loading spinner
+        function hideLoadingSpinner() {
+            isLoading = false;
+            loadingSpinner.classList.remove('active');
+        }
+
+        // Function to simulate typing effect with pause/resume
+        function typeResponse(response) {
+            const messageBox = addMessageToChat('Danvil', '', 'ai');
+            const responseDiv = messageBox.querySelector('.ai-response');
+            let index = 0;
+            const chars = response.split('');
+
+            function typeChar() {
+                if (isPaused) {
+                    typingInterval = setTimeout(typeChar, 100);
+                    return;
+                }
+
+                if (index < chars.length) {
+                    responseDiv.innerHTML = marked.parse(chars.slice(0, index + 1).join(''));
+                    document.querySelectorAll('pre code').forEach((block) => {
+                        hljs.highlightElement(block);
+                    });
+                    index++;
+                    typingInterval = setTimeout(typeChar, 10);
+                } else {
+                    clearTimeout(typingInterval);
+                    if (voiceToggle.checked) {
+                        speakResponse(response);
+                    }
+                }
+            }
+
+            typeChar();
+        }
+
+        // Function to get conversation history context
+        function getConversationContext() {
+            const relevantHistory = chatHistory
+                .filter(item => item.type !== 'typing')
+                .slice(-5);
+            let context = '';
+            relevantHistory.forEach(item => {
+                const role = item.sender === 'You' ? 'User' : 'Danvil';
+                const truncatedMessage = item.message.length > 200 
+                    ? item.message.slice(0, 197) + '...' 
+                    : item.message;
+                context += `${role}: ${truncatedMessage}\n`;
+            });
+            return context;
+        }
+
+        // Function to generate AI response using Google Gemini API
+        async function generateAIResponse(prompt) {
+            if (prompt.length > MAX_INPUT_LENGTH) {
+                throw new Error('Input exceeds 1000 characters. Please shorten it.');
+            }
+
+            const cacheKey = `ai_${prompt}_${currentModel}`;
+            if (cache.has(cacheKey)) {
+                console.log('Returning cached response for:', cacheKey);
+                return cache.get(cacheKey);
+            }
+
+            try {
+                const geminiModel = 'gemini-1.5-flash';
+                const apiKey = 'AIzaSyD-WJmxHIkKApO6RPi-_y9kjIF-CkbIqCw';
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/${geminiModel}:generateContent?key=${apiKey}`;
+
+                // Build prompt based on mode
+                let systemPrompt = `You are Danvil AI, created by Danvil, a student at MUST University. Provide concise, accurate responses in markdown format with headers, lists, and code blocks where appropriate. Do not mention Google or other AI providers.`;
+                
+                if (currentModel === 'danvil-fast') {
+                    systemPrompt += ` You are in Search mode. Provide detailed, well-structured answers with examples and facts, as if synthesizing web search results.`;
+                }
+
+                // Include conversation history
+                const conversationContext = getConversationContext();
+                const fullPrompt = conversationContext
+                    ? `${systemPrompt}\n\n### Conversation History\n${conversationContext}\n### Current Prompt\nUser: ${prompt}`
+                    : `${systemPrompt}\n\n### Current Prompt\nUser: ${prompt}`;
+
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        contents: [
+                            {
+                                role: 'user',
+                                parts: [
+                                    { text: fullPrompt }
+                                ]
+                            }
+                        ],
+                        generationConfig: {
+                            temperature: currentModel === 'danvil-fast' ? 0.9 : 0.7,
+                            maxOutputTokens: currentModel === 'danvil-fast' ? 800 : 500
+                        }
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(`HTTP error! Status: ${response.status}, Message: ${errorData.error?.message || 'Unknown error'}`);
+                }
+
+                const data = await response.json();
+
+                if (data.promptFeedback && data.promptFeedback.blockReason) {
+                    throw new Error(`Prompt blocked: ${data.promptFeedback.blockReason}`);
+                }
+
+                if (!data.candidates || data.candidates.length === 0) {
+                    throw new Error('No response from API.');
+                }
+
+                const aiResponse = data.candidates[0].content.parts[0].text;
+                cache.set(cacheKey, aiResponse);
+                return aiResponse;
+
+            } catch (error) {
+                console.error('Error in generateAIResponse:', error);
+                if (error.message.includes('NetworkError') || error.message.includes('CORS')) {
+                    throw new Error('Network error: API request blocked, possibly due to CORS. Use a server-side proxy for production.');
+                }
+                throw error;
+            }
+        }
+
+        // Function to speak AI response
+        function speakResponse(text) {
+            const cleanText = text.replace(/[#*`]+/g, '').replace(/\n/g, ' ').slice(0, 500);
+            const utterance = new SpeechSynthesisUtterance(cleanText);
+            utterance.lang = 'en-US';
+            utterance.volume = 1;
+            utterance.rate = 1;
+            utterance.pitch = 1;
+            window.speechSynthesis.speak(utterance);
+        }
+
+        // Microphone input
+        micBtn.addEventListener('click', () => {
+            if (!('webkitSpeechRecognition' in window)) {
+                alert('Speech recognition not supported. Use Chrome.');
+                return;
+            }
+
+            const recognition = new webkitSpeechRecognition();
+            recognition.lang = 'en-US';
+            recognition.interimResults = false;
+            recognition.maxAlternatives = 1;
+
+            recognition.start();
+            micBtn.style.color = '#ff4d4d';
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript.slice(0, MAX_INPUT_LENGTH);
+                userInput.value = transcript;
+                micBtn.style.color = '';
+                sendMessage();
+            };
+
+            recognition.onerror = (event) => {
+                console.error('Speech recognition error:', event.error);
+                micBtn.style.color = '';
+                alert('Speech recognition failed. Try again.');
+            };
+
+            recognition.onend = () => {
+                micBtn.style.color = '';
+            };
+        });
+
+        // Render chat history
+        function renderHistory() {
+            historyItems.innerHTML = '';
+            if (chatHistory.length === 0) {
+                historyItems.innerHTML = '<p>No chat history available.</p>';
+                return;
+            }
+
+            chatHistory
+                .filter(item => item.type !== 'typing')
+                .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+                .forEach(item => {
+                    const historyItem = document.createElement('div');
+                    historyItem.className = 'history-item';
+                    const preview = item.message.length > 50 ? item.message.substring(0, 50) + '...' : item.message;
+                    historyItem.innerHTML = `
+                        <strong>${item.sender}</strong>: ${preview}
+                        <small>${new Date(item.timestamp).toLocaleString()}</small>
+                    `;
+                    historyItem.addEventListener('click', () => {
+                        resultsContainer.innerHTML = '';
+                        const index = chatHistory.findIndex(h => h.id === item.id);
+                        chatHistory.slice(0, index + 1).forEach(history => {
+                            if (history.type !== 'typing') {
+                                addMessageToChat(history.sender, history.message, history.type);
+                            }
+                        });
+                        historyPanel.classList.remove('active');
+                        document.querySelector('.welcome-message').style.display = 'none';
+                    });
+                    historyItems.appendChild(historyItem);
+                });
+        }
+
+        // Auto-scroll observer
+        const observer = new MutationObserver(() => {
+            if (scrollToggle.checked) {
+                const latestMessage = resultsContainer.lastElementChild;
+                if (latestMessage) {
+                    latestMessage.scrollIntoView({ behavior: 'smooth' });
+                }
+            }
+        });
+        observer.observe(resultsContainer, { childList: true });
+
+        // Initialize Highlight.js
+        hljs.highlightAll();
+
+        // Initialize chat history
+        renderHistory();
+    </script>
+</body>
+</html>
