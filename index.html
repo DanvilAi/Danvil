@@ -1,501 +1,969 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Danvil AI - Your Intelligent Assistant</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #6e48aa;
-            --primary-dark: #4a2d7a;
-            --secondary: #9d50bb;
-            --accent: #4776e6;
-            --text: #2d3748;
-            --text-light: #718096;
-            --light: #f7fafc;
-            --white: #ffffff;
-            --gradient: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 50%, var(--accent) 100%);
-            --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            --radius: 8px;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            color: var(--text);
-            background-color: var(--light);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        /* Header Styles */
-        header {
-            background: var(--white);
-            box-shadow: var(--shadow);
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1.5rem 5%;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--primary);
-            text-decoration: none;
-        }
-
-        .logo img {
-            height: 40px;
-            width: auto;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-        }
-
-        .nav-links a {
-            color: var(--text);
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s;
-        }
-
-        .nav-links a:hover {
-            color: var(--primary);
-        }
-
-        .cta-button {
-            background: var(--gradient);
-            color: var(--white);
-            padding: 0.6rem 1.5rem; /* Reduced size */
-            border-radius: var(--radius);
-            font-weight: 600;
-            font-size: 0.9rem; /* Smaller font size */
-            text-decoration: none;
-            transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
-            box-shadow: 0 4px 12px rgba(110, 72, 170, 0.3);
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-        }
-
-        .cta-button i {
-            font-size: 1rem; /* Smaller icon size */
-        }
-
-        .cta-button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            transition: left 0.4s ease-in-out;
-        }
-
-        .cta-button:hover::before {
-            left: 100%;
-        }
-
-        .cta-button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 20px rgba(110, 72, 170, 0.5);
-            background: linear-gradient(135deg, var(--secondary) 0%, var(--accent) 50%, var(--primary) 100%);
-        }
-
-        .mobile-menu-btn {
-            display: none;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            color: var(--primary);
-            cursor: pointer;
-        }
-
-        /* Hero Section */
-        .hero {
-            padding: 10rem 5% 5rem;
-            background: var(--gradient);
-            color: var(--white);
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxkZWZzPjxwYXR0ZXJuIGlkPSJwYXR0ZXJuIiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHBhdHRlcm5UcmFuc2Zvcm09InJvdGF0ZSg0NSkiPjxyZWN0IHdpZHRoPSIyMCIgaGVpZ2h0PSI2MCIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjA1KSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3QgZmlsbD0idXJsKCNwYXR0ZXJuKSIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIvPjwvc3ZnPg==');
-        }
-
-        .hero-content {
-            max-width: 800px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 1;
-        }
-
-        .hero h1 {
-            font-size: 3.5rem;
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-            line-height: 1.2;
-        }
-
-        .hero p {
-            font-size: 1.2rem;
-            margin-bottom: 2.5rem;
-            opacity: 0.9;
-        }
-
-        .hero-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin-top: 2rem;
-        }
-
-        .hero-buttons .cta-button {
-            background: var(--white);
-            color: var(--primary);
-            border-radius: var(--radius);
-            padding: 0.7rem 1.5rem;
-            font-size: 1rem;
-        }
-
-        .hero-buttons .secondary-button {
-            background: rgba(255, 255, 255, 0.1);
-            color: var(--white);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            padding: 0.7rem 1.5rem;
-            border-radius: var(--radius);
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.3s;
-        }
-
-        .hero-buttons .secondary-button:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: translateY(-3px);
-        }
-
-        .hero-image {
-            margin-top: 3rem;
-            position: relative;
-            border-radius: var(--radius);
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .hero-image img {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-
-        /* Capabilities Section */
-        .capabilities {
-            padding: 6rem 5%;
-            background: var(--white);
-            text-align: center;
-        }
-
-        .section-header {
-            margin-bottom: 4rem;
-        }
-
-        .section-header h2 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            color: var(--primary-dark);
-        }
-
-        .section-header p {
-            font-size: 1.1rem;
-            color: var(--text-light);
-            max-width: 700px;
-            margin: 0 auto;
-        }
-
-        .capabilities-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .capability-card {
-            background: var(--white);
-            border-radius: var(--radius);
-            padding: 1.5rem;
-            box-shadow: var(--shadow);
-            transition: transform 0.3s, box-shadow 0.3s;
-            text-align: center;
-        }
-
-        .capability-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-        }
-
-        .capability-icon {
-            width: 60px;
-            height: 60px;
-            margin: 0 auto 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--gradient);
-            color: var(--white);
-            border-radius: 50%;
-            font-size: 1.5rem;
-        }
-
-        .capability-card h3 {
-            font-size: 1.3rem;
-            margin-bottom: 0.8rem;
-            color: var(--primary);
-        }
-
-        .capability-card p {
-            font-size: 0.9rem;
-            color: var(--text-light);
-        }
-
-        /* Responsive Styles */
-        @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-                flex-direction: column;
-                position: absolute;
-                top: 100%;
-                left: 0;
-                width: 100%;
-                background: var(--white);
-                padding: 1rem;
-                box-shadow: var(--shadow);
-            }
-
-            .nav-links.active {
-                display: flex;
-            }
-
-            .mobile-menu-btn {
-                display: block;
-            }
-
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-
-            .hero p {
-                font-size: 1rem;
-            }
-
-            .hero-buttons {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .section-header h2 {
-                font-size: 2rem;
-            }
-
-            .cta-button {
-                padding: 0.5rem 1.2rem;
-                font-size: 0.85rem;
-            }
-
-            .cta-button i {
-                font-size: 0.9rem;
-            }
-        }
-
-        @media (max-width: 576px) {
-            .hero h1 {
-                font-size: 2rem;
-            }
-
-            .capability-card {
-                padding: 1rem;
-            }
-
-            .cta-button {
-                padding: 0.5rem 1rem;
-                font-size: 0.8rem;
-            }
-
-            .cta-button i {
-                font-size: 0.8rem;
-            }
-        }
-
-        /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .fade-in {
-            animation: fadeIn 0.8s ease-out forwards;
-        }
-
-        .delay-1 { animation-delay: 0.2s; }
-        .delay-2 { animation-delay: 0.4s; }
-        .delay-3 { animation-delay: 0.6s; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Danvil AI</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" />
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background: #0a0a0a;
+      color: #e0e0e0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 16px;
+      overflow-x: hidden;
+    }
+    .app-container {
+      max-width: 520px;
+      width: 100%;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .header-icons {
+      display: flex;
+      justify-content: flex-end;
+      gap: 16px;
+      padding: 8px 0;
+    }
+    .icon-btn {
+      background: none;
+      color: #e0e0e0;
+      font-size: 1.2rem;
+      padding: 8px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+      outline: none;
+    }
+    .icon-btn:hover {
+      background: #292929;
+    }
+    .icon-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    .icon-btn:focus-visible {
+      box-shadow: 0 0 0 3px rgba(90, 62, 49, 0.4);
+    }
+    .avatar-circle {
+      width: 36px;
+      height: 36px;
+      background: #5a3e31;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      color: #f3e8e0;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .avatar-circle:hover {
+      transform: scale(1.05);
+    }
+    .intro-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: opacity 0.3s ease-out, height 0.3s ease-out;
+    }
+    .intro-content.hidden {
+      opacity: 0;
+      height: 0;
+      overflow: hidden;
+    }
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 20px 0;
+    }
+    .logo-text {
+      font-size: 1.8rem;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #f3e8e0, #d97336);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .buttons-row {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    button {
+      background: #1f1f1f;
+      color: #e0e0e0;
+      border: none;
+      border-radius: 24px;
+      padding: 10px 20px;
+      font-size: 0.95rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+      outline: none;
+    }
+    button:hover {
+      background: #292929;
+    }
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    button:focus-visible {
+      box-shadow: 0 0 0 3px rgba(90, 62, 49, 0.4);
+    }
+    .chat-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 16px 0;
+      overflow-y: auto;
+      max-height: calc(100vh - 200px);
+      scroll-behavior: smooth;
+    }
+    .message {
+      max-width: 80%;
+      padding: 12px 16px;
+      border-radius: 16px;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      word-break: break-word;
+      overflow-wrap: anywhere;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      transition: transform 0.2s, opacity 0.2s;
+      position: relative;
+    }
+    .message.new {
+      transform: scale(0.95);
+      opacity: 0;
+      animation: messageAppear 0.3s forwards;
+    }
+    @keyframes messageAppear {
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+    .user-message {
+      background: #5a3e31;
+      color: #f3e8e0;
+      align-self: flex-end;
+      border-bottom-right-radius: 4px;
+    }
+    .ai-message {
+      background: #1f1f1f;
+      color: #e0e0e0;
+      align-self: flex-start;
+      border-bottom-left-radius: 4px;
+      position: relative;
+    }
+    .ai-message.typing::after {
+      content: '';
+      display: inline-block;
+      width: 24px;
+      height: 16px;
+      animation: loadingDots 1.5s infinite;
+      margin-left: 4px;
+    }
+    @keyframes loadingDots {
+      0% { content: '.'; }
+      33% { content: '..'; }
+      66% { content: '...'; }
+      100% { content: '.'; }
+    }
+    .ai-message.loading {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 12px;
+      min-height: 40px;
+    }
+    .loading-dots {
+      display: flex;
+      gap: 6px;
+    }
+    .loading-dots span {
+      width: 8px;
+      height: 8px;
+      background: #d97336;
+      border-radius: 50%;
+      animation: pulseLoader 1.2s infinite ease-in-out;
+    }
+    .loading-dots span:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+    .loading-dots span:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+    @keyframes pulseLoader {
+      0%, 80%, 100% {
+        transform: scale(0.6);
+        opacity: 0.6;
+      }
+      40% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+    .ai-response {
+      font-size: 0.85rem;
+    }
+    .ai-response pre {
+      background-color: #3a3a3a;
+      padding: 15px;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin-bottom: 12px;
+    }
+    .ai-response code {
+      background-color: #3a3a3a;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.9em;
+    }
+    .ai-response table {
+      border-collapse: collapse;
+      width: 100%;
+      margin: 12px 0;
+    }
+    .ai-response th, .ai-response td {
+      border: 1px solid #4a4a4a;
+      padding: 8px 12px;
+      text-align: left;
+    }
+    .ai-response th {
+      background-color: #3a3a3a;
+    }
+    .ai-response tr:nth-child(even) {
+      background-color: #2a2a2a;
+    }
+    .message-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+      justify-content: flex-end;
+      visibility: hidden;
+    }
+    .message-actions.visible {
+      visibility: visible;
+    }
+    .action-btn {
+      background: none;
+      color: #8e8e93;
+      font-size: 0.9rem;
+      padding: 4px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: color 0.2s, background 0.2s;
+      border: none;
+    }
+    .action-btn:hover {
+      color: #e0e0e0;
+      background: rgba(255, 255, 255, 0.1);
+    }
+    .action-btn.active, .action-btn.copied {
+      color: #d97336;
+    }
+    .action-btn:focus-visible {
+      box-shadow: 0 0 0 3px rgba(90, 62, 49, 0.4);
+    }
+    .input-container {
+      width: 100%;
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      max-width: 520px;
+      padding: 0 16px;
+      z-index: 10;
+    }
+    .input-wrapper {
+      position: relative;
+      width: 100%;
+    }
+    .input-inner {
+      background: #1c1c1e;
+      border-radius: 12px;
+      padding: 8px 12px;
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      transition: all 0.2s;
+      border: 1px solid transparent;
+    }
+    .input-inner:focus-within {
+      border-color: #5a3e31;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    }
+    .input-textarea {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: #e0e0e0;
+      font-size: 0.95rem;
+      font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+      outline: none;
+      resize: none;
+      min-height: 32px;
+      max-height: 150px;
+      padding: 8px;
+      line-height: 1.5;
+      border-radius: 8px;
+      transition: background 0.2s;
+      scrollbar-width: thin;
+      scrollbar-color: #5a3e31 transparent;
+    }
+    .input-textarea:focus {
+      background: rgba(255, 255, 255, 0.03);
+    }
+    .input-textarea::placeholder {
+      color: #8e8e93;
+      font-style: italic;
+    }
+    .input-textarea::-webkit-scrollbar {
+      width: 6px;
+    }
+    .input-textarea::-webkit-scrollbar-thumb {
+      background-color: #5a3e31;
+      border-radius: 3px;
+    }
+    .input-textarea::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .input-options-left {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+    }
+    .input-options-left button {
+      background: none;
+      color: #8e8e93;
+      font-size: 1.1rem;
+      padding: 6px;
+      border-radius: 50%;
+      transition: all 0.2s;
+      border: none;
+      cursor: pointer;
+    }
+    .input-options-left button:hover {
+      color: #e0e0e0;
+      background: rgba(255, 255, 255, 0.05);
+    }
+    .input-options-left button:focus-visible {
+      box-shadow: 0 0 0 3px rgba(90, 62, 49, 0.4);
+    }
+    .input-options-left button.recording {
+      color: #d97336;
+      animation: pulse 1s infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+    .input-option-danvil {
+      background: #2c2c2e;
+      color: #e0e0e0;
+      padding: 6px 12px;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      border: 1px solid #3a3a3c;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      height: 32px;
+      white-space: nowrap;
+    }
+    .input-option-danvil:hover {
+      background: #3a3a3c;
+    }
+    .input-option-danvil:focus-visible {
+      box-shadow: 0 0 0 3px rgba(90, 62, 49, 0.4);
+    }
+    .send-button {
+      background: linear-gradient(135deg, #5a3e31, #704b38);
+      color: #fff;
+      border-radius: 50%;
+      padding: 8px;
+      font-size: 1.1rem;
+      transition: all 0.2s;
+      border: none;
+      cursor: pointer;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .send-button:hover:not(:disabled) {
+      transform: scale(1.05);
+      background: linear-gradient(135deg, #704b38, #8a5a45);
+    }
+    .send-button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      background: #3a3a3a;
+    }
+    .send-button:focus-visible {
+      box-shadow: 0 0 0 3px rgba(90, 62, 49, 0.6);
+    }
+    .error-message {
+      color: #ff4d4d;
+      font-size: 0.85rem;
+      margin-top: 8px;
+      display: none;
+      text-align: center;
+      animation: shake 0.5s;
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-2px); }
+      40%, 80% { transform: translateX(2px); }
+    }
+    .character-count {
+      position: absolute;
+      right: 16px;
+      top: -20px;
+      font-size: 0.75rem;
+      color: #8e8e93;
+      background: rgba(28, 28, 30, 0.8);
+      padding: 2px 6px;
+      border-radius: 10px;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .character-count.visible {
+      opacity: 1;
+    }
+    .character-count.warning {
+      color: #ff9933;
+    }
+    .character-count.error {
+      color: #ff4d4d;
+    }
+    .suggestions-container {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.3s;
+      height: 0;
+      overflow: hidden;
+    }
+    .suggestions-container.visible {
+      opacity: 1;
+      transform: translateY(0);
+      height: auto;
+    }
+    .suggestion-chip {
+      background: rgba(90, 62, 49, 0.2);
+      color: #e0e0e0;
+      border: 1px solid #5a3e31;
+      border-radius: 16px;
+      padding: 6px 12px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .suggestion-chip:hover {
+      background: rgba(90, 62, 49, 0.4);
+    }
+    @media (max-width: 480px) {
+      .logo-text { font-size: 1.6rem; }
+      button { padding: 8px 16px; font-size: 0.9rem; }
+      .input-inner { padding: 6px 10px; }
+      .input-textarea { font-size: 0.9rem; }
+      .message { font-size: 0.85rem; padding: 10px 14px; }
+      .input-option-danvil { display: none; }
+    }
+  </style>
 </head>
 <body>
-    <!-- Header -->
-    <header>
-        <nav class="navbar">
-            <a href="#" class="logo">
-                <img src="https://raw.githubusercontent.com/danvil33/Danvil-AI-/refs/heads/main/images%20(9).jpeg" alt="Danvil AI Logo">
-                <span>Danvil AI</span>
-            </a>
-            <div class="nav-links" id="nav-links">
-                <a href="#capabilities">Capabilities</a>
-                <a href="#demo">How It Works</a>
-                <a href="#pricing">Pricing</a>
-                <a href="#testimonials">Testimonials</a>
-            </div>
-            <a href="chat.html" class="cta-button" id="try-now-btn">
-                <i class="fas fa-sparkles"></i> Try Now
-            </a>
-            <button class="mobile-menu-btn" id="mobile-menu-btn">
-                <i class="fas fa-bars"></i>
-            </button>
-        </nav>
-    </header>
-
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-content fade-in">
-            <h1>Meet Danvil AI - Your Intelligent Assistant</h1>
-            <p>Powered by advanced AI to help you with research, coding, writing, and more. Experience the future of conversational AI today.</p>
-            <div class="hero-buttons">
-                <a href="#capabilities" class="cta-button">Learn More</a>
-                <a href="chat.html" class="secondary-button" id="try-free-btn">Try For Free</a>
-            </div>
+  <div class="app-container">
+    <div class="header-icons">
+      <button class="icon-btn" aria-label="Notifications"><i class="fa-regular fa-bell"></i></button>
+      <button class="icon-btn" aria-label="Search"><i class="fa-solid fa-magnifying-glass"></i></button>
+      <div class="avatar-circle" aria-label="User profile">D</div>
+    </div>
+    <div class="intro-content" id="intro-content">
+      <div class="logo-container">
+        <span class="logo-text"></span>
+      </div>
+      <div class="buttons-row">
+        <button><i class="fa-regular fa-image"></i> Create Images</button>
+        <button><i class="fa-solid fa-image-portrait"></i> Edit Image</button>
+      </div>
+      <div class="buttons-row">
+        <button><i class="fa-regular fa-newspaper"></i> Latest News</button>
+        <button><i class="fa-regular fa-user"></i> Personas <i class="fa-solid fa-chevron-down"></i></button>
+      </div>
+    </div>
+    <div class="chat-container" id="chat-container" role="log" aria-live="polite"></div>
+    <div class="input-container">
+      <div class="suggestions-container" id="suggestions-container">
+        <div class="suggestion-chip">Explain quantum computing</div>
+        <div class="suggestion-chip">Write a poem about AI</div>
+        <div class="suggestion-chip">How to make a website?</div>
+      </div>
+      <div class="input-wrapper">
+        <div class="character-count" id="character-count">0 / 1000</div>
+        <div class="input-inner">
+          <div class="input-options-left">
+            <button class="web-search-btn" aria-label="Search web"><i class="fa-solid fa-globe"></i></button>
+            <button class="voice-btn" aria-label="Voice input"><i class="fa-solid fa-microphone"></i></button>
+          </div>
+          <textarea class="input-textarea" placeholder="Ask Danvil AI anything?" id="user-input" aria-label="Type your query" maxlength="1000" rows="1"></textarea>
+          <div class="input-option-danvil" aria-label="Select Danvil version" role="button" tabindex="0">
+            <i class="fa-solid fa-bolt"></i> Danvil
+            <i class="fa-solid fa-chevron-down"></i>
+          </div>
+          <button class="send-button" id="send-button" aria-label="Send query"><i class="fa-solid fa-arrow-up"></i></button>
         </div>
-        <div class="hero-image fade-in delay-1">
-            <img src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80" alt="AI Assistant Interface">
-        </div>
-    </section>
+        <div class="error-message" id="error-message">Input is too long (max 1000 characters).</div>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Configuration
+    const API_ENDPOINT = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
+    const API_KEY = 'AIzaSyD-WJmxHIkKApO6RPi-_y9kjIF-CkbIqCw'; // Replace with your actual API key
+    const MIN_REQUEST_INTERVAL = 1000;
+    const MAX_RETRIES = 2;
+    const MAX_INPUT_LENGTH = 1000;
+    const WARNING_THRESHOLD = 800;
 
-    <!-- Capabilities Section -->
-    <section class="capabilities" id="capabilities">
-        <div class="section-header fade-in">
-            <h2>What Danvil AI Can Do</h2>
-            <p>Explore the powerful capabilities that make Danvil AI your ultimate assistant.</p>
-        </div>
-        <div class="capabilities-grid">
-            <div class="capability-card fade-in delay-1">
-                <div class="capability-icon">
-                    <i class="fas fa-brain"></i>
-                </div>
-                <h3>Smart Research</h3>
-                <p>Quickly find accurate answers and insights for your research needs.</p>
-            </div>
-            <div class="capability-card fade-in delay-2">
-                <div class="capability-icon">
-                    <i class="fas fa-code"></i>
-                </div>
-                <h3>Code Assistance</h3>
-                <p>Generate, debug, and explain code in multiple programming languages.</p>
-            </div>
-            <div class="capability-card fade-in delay-3">
-                <div class="capability-icon">
-                    <i class="fas fa-pen"></i>
-                </div>
-                <h3>Content Creation</h3>
-                <p>Create engaging content, from articles to social media posts, effortlessly.</p>
-            </div>
-            <div class="capability-card fade-in delay-1">
-                <div class="capability-icon">
-                    <i class="fas fa-language"></i>
-                </div>
-                <h3>Multilingual Support</h3>
-                <p>Communicate fluently in multiple languages with natural responses.</p>
-            </div>
-        </div>
-    </section>
+    let isFirstQuery = true;
+    let lastRequestTime = 0;
+    let chatHistory = [];
+    const cache = new Map();
+    let recognition = null;
 
-    <script>
-        // Mobile Menu Toggle
-        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-        const navLinks = document.getElementById('nav-links');
+    // DOM Elements
+    const introContent = document.getElementById('intro-content');
+    const chatContainer = document.getElementById('chat-container');
+    const userInput = document.getElementById('user-input');
+    const sendButton = document.getElementById('send-button');
+    const errorMessage = document.getElementById('error-message');
+    const characterCount = document.getElementById('character-count');
+    const suggestionsContainer = document.getElementById('suggestions-container');
+    const voiceButton = document.querySelector('.voice-btn');
+    const webSearchButton = document.querySelector('.web-search-btn');
 
-        mobileMenuBtn.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
-            mobileMenuBtn.innerHTML = navLinks.classList.contains('active') ?
-                '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
-        });
-
-        // Smooth scrolling for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const targetId = this.getAttribute('href');
-                if (targetId === '#') return;
-                const targetElement = document.querySelector(targetId);
-                if (targetElement) {
-                    targetElement.scrollIntoView({
-                        behavior: 'smooth'
-                    });
-                }
-            });
-        });
-
-        // Animation on scroll
-        const fadeElements = document.querySelectorAll('.fade-in');
-
-        function checkScroll() {
-            fadeElements.forEach(element => {
-                const elementTop = element.getBoundingClientRect().top;
-                const windowHeight = window.innerHeight;
-                if (elementTop < windowHeight - 100) {
-                    element.style.opacity = '1';
-                    element.style.transform = 'translateY(0)';
-                }
-            });
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      // Show suggestions when input is empty and focused
+      userInput.addEventListener('focus', () => {
+        if (!userInput.value.trim()) {
+          suggestionsContainer.classList.add('visible');
         }
+      });
 
-        window.addEventListener('scroll', checkScroll);
-        window.addEventListener('load', checkScroll);
-    </script>
+      userInput.addEventListener('blur', () => {
+        setTimeout(() => {
+          suggestionsContainer.classList.remove('visible');
+        }, 100);
+      });
+
+      // Handle suggestion clicks
+      document.querySelectorAll('.suggestion-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+          userInput.value = chip.textContent;
+          userInput.focus();
+          updateCharacterCount();
+          suggestionsContainer.classList.remove('visible');
+        });
+      });
+
+      // Send button click handler
+      sendButton.addEventListener('click', () => sendQuery(false));
+
+      // Web search button click handler
+      webSearchButton.addEventListener('click', () => sendQuery(true));
+
+      // Voice input handler
+      voiceButton.addEventListener('click', toggleVoiceInput);
+
+      // Handle Enter key
+      userInput.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' && !event.shiftKey) {
+          event.preventDefault();
+          sendQuery(false);
+        }
+      });
+
+      // Character count update
+      userInput.addEventListener('input', updateCharacterCount);
+
+      // Ensure autoscroll on container updates
+      const observer = new MutationObserver(() => {
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+      });
+      observer.observe(chatContainer, { childList: true });
+
+      // Initialize Highlight.js
+      hljs.highlightAll();
+
+      // Initialize Web Speech API
+      if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
+        recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        recognition.continuous = false;
+        recognition.interimResults = true;
+        recognition.lang = 'en-US';
+
+        recognition.onresult = (event) => {
+          const transcript = Array.from(event.results)
+            .map(result => result[0].transcript)
+            .join('');
+          userInput.value = transcript;
+          updateCharacterCount();
+        };
+
+        recognition.onend = () => {
+          voiceButton.classList.remove('recording');
+          userInput.focus();
+        };
+
+        recognition.onerror = (event) => {
+          console.error('Speech recognition error:', event.error);
+          voiceButton.classList.remove('recording');
+          errorMessage.style.display = 'block';
+          errorMessage.textContent = 'Voice input error. Please try again.';
+          setTimeout(() => {
+            errorMessage.style.display = 'none';
+          }, 2000);
+        };
+      } else {
+        voiceButton.disabled = true;
+        voiceButton.title = 'Voice input not supported in this browser';
+      }
+    });
+
+    // Toggle voice input
+    function toggleVoiceInput() {
+      if (!recognition) return;
+      if (voiceButton.classList.contains('recording')) {
+        recognition.stop();
+        voiceButton.classList.remove('recording');
+      } else {
+        recognition.start();
+        voiceButton.classList.add('recording');
+        userInput.value = '';
+        updateCharacterCount();
+      }
+    }
+
+    // Update character count display
+    function updateCharacterCount() {
+      const count = userInput.value.length;
+      characterCount.textContent = `${count} / ${MAX_INPUT_LENGTH}`;
+      
+      if (count === 0) {
+        characterCount.classList.remove('visible', 'warning', 'error');
+      } else {
+        characterCount.classList.add('visible');
+        if (count > WARNING_THRESHOLD) {
+          characterCount.classList.add('warning');
+          characterCount.classList.remove('error');
+        } else if (count > MAX_INPUT_LENGTH) {
+          characterCount.classList.add('error');
+          characterCount.classList.remove('warning');
+        } else {
+          characterCount.classList.remove('warning', 'error');
+        }
+      }
+    }
+
+    // Sanitize input
+    function sanitizeInput(input) {
+      const div = document.createElement('div');
+      div.textContent = input;
+      return div.innerHTML.replace(/[<>]/g, '');
+    }
+
+    // Add message to chat
+    function addMessage(content, isUser = false) {
+      const messageDiv = document.createElement('div');
+      messageDiv.className = `message ${isUser ? 'user-message' : 'ai-message'} new`;
+      messageDiv.setAttribute('role', 'alert');
+      
+      if (isUser) {
+        messageDiv.textContent = content;
+        chatHistory.push({ role: 'user', content });
+      } else {
+        messageDiv.innerHTML = '<div class="ai-response"></div>';
+      }
+      
+      chatContainer.appendChild(messageDiv);
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+      
+      return messageDiv;
+    }
+
+    // Type message and add action buttons
+    async function typeMessage(messageDiv, content) {
+      messageDiv.classList.add('typing');
+      const responseDiv = messageDiv.querySelector('.ai-response');
+      responseDiv.innerHTML = '';
+      const chars = content.split('');
+      
+      for (let i = 0; i < chars.length; i++) {
+        responseDiv.innerHTML = marked.parse(chars.slice(0, i + 1).join(''));
+        document.querySelectorAll('pre code').forEach((block) => {
+          hljs.highlightElement(block);
+        });
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+        await new Promise(resolve => setTimeout(resolve, 20));
+      }
+      
+      messageDiv.classList.remove('typing');
+      chatHistory.push({ role: 'model', content });
+      
+      // Add action buttons after typing is complete
+      const actionsDiv = document.createElement('div');
+      actionsDiv.className = 'message-actions visible';
+      actionsDiv.innerHTML = `
+        <button class="action-btn like-btn" aria-label="Like response"><i class="fa-regular fa-thumbs-up"></i></button>
+        <button class="action-btn dislike-btn" aria-label="Dislike response"><i class="fa-regular fa-thumbs-down"></i></button>
+        <button class="action-btn copy-btn" aria-label="Copy response"><i class="fa-regular fa-copy"></i></button>
+      `;
+      messageDiv.appendChild(actionsDiv);
+      
+      // Add event listeners for action buttons
+      actionsDiv.querySelector('.like-btn').addEventListener('click', () => {
+        const likeBtn = actionsDiv.querySelector('.like-btn');
+        const dislikeBtn = actionsDiv.querySelector('.dislike-btn');
+        likeBtn.classList.toggle('active');
+        if (likeBtn.classList.contains('active')) {
+          dislikeBtn.classList.remove('active');
+        }
+      });
+
+      actionsDiv.querySelector('.dislike-btn').addEventListener('click', () => {
+        const likeBtn = actionsDiv.querySelector('.like-btn');
+        const dislikeBtn = actionsDiv.querySelector('.dislike-btn');
+        dislikeBtn.classList.toggle('active');
+        if (dislikeBtn.classList.contains('active')) {
+          likeBtn.classList.remove('active');
+        }
+      });
+
+      actionsDiv.querySelector('.copy-btn').addEventListener('click', () => {
+        navigator.clipboard.writeText(content).then(() => {
+          const copyBtn = actionsDiv.querySelector('.copy-btn');
+          copyBtn.classList.add('copied');
+          copyBtn.innerHTML = '<i class="fa-solid fa-check"></i>';
+          setTimeout(() => {
+            copyBtn.classList.remove('copied');
+            copyBtn.innerHTML = '<i class="fa-regular fa-copy"></i>';
+          }, 2000);
+        }).catch(() => {
+          console.error('Failed to copy text');
+        });
+      });
+      
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+
+    // Show loading animation
+    async function showLoadingAnimation() {
+      const messageDiv = document.createElement('div');
+      messageDiv.className = 'message ai-message loading new';
+      messageDiv.setAttribute('role', 'alert');
+      messageDiv.innerHTML = `
+        <div class="loading-dots">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      `;
+      chatContainer.appendChild(messageDiv);
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+      return messageDiv;
+    }
+
+    // Get conversation context
+    function getConversationContext() {
+      return chatHistory
+        .slice(-5)
+        .map(item => `${item.role === 'user' ? 'User' : ''}: ${item.content.length > 200 ? item.content.slice(0, 197) + '...' : item.content}`)
+        .join('\n')
+        .replace(/^: /gm, '');
+    }
+
+    // Send query to Gemini API
+    async function sendQuery(isDeepSearch = false) {
+      const input = sanitizeInput(userInput.value.trim());
+      
+      if (!input) {
+        const loadingDiv = await showLoadingAnimation();
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        loadingDiv.remove();
+        return;
+      }
+      
+      if (input.length > MAX_INPUT_LENGTH) {
+        errorMessage.style.display = 'block';
+        errorMessage.textContent = `Input is too long (max ${MAX_INPUT_LENGTH} characters).`;
+        return;
+      }
+
+      const now = Date.now();
+      if (now - lastRequestTime < MIN_REQUEST_INTERVAL) {
+        const loadingDiv = await showLoadingAnimation();
+        await new Promise(resolve => setTimeout(resolve, MIN_REQUEST_INTERVAL - (now - lastRequestTime)));
+        loadingDiv.remove();
+        return;
+      }
+      
+      lastRequestTime = now;
+
+      addMessage(input, true);
+      userInput.value = '';
+      userInput.style.height = 'auto';
+      errorMessage.style.display = 'none';
+      characterCount.classList.remove('visible');
+      suggestionsContainer.classList.remove('visible');
+
+      if (isFirstQuery) {
+        introContent.classList.add('hidden');
+        isFirstQuery = false;
+      }
+
+      const loadingDiv = await showLoadingAnimation();
+      const aiMessageDiv = addMessage('', false);
+      sendButton.disabled = true;
+      webSearchButton.disabled = true;
+      voiceButton.disabled = true;
+
+      let attempts = 0;
+      while (attempts <= MAX_RETRIES) {
+        try {
+          if (!API_KEY || API_KEY === 'YOUR_API_KEY_HERE') {
+            throw new Error('API key is missing or invalid');
+          }
+
+          const cacheKey = `ai_${isDeepSearch ? 'deep_' : ''}${input}`;
+          if (cache.has(cacheKey)) {
+            loadingDiv.remove();
+            const cachedResponse = cache.get(cacheKey);
+            await typeMessage(aiMessageDiv, cachedResponse);
+            break;
+          }
+
+          const systemPrompt = `You are Danvil AI, created by Danvil, a student at MUST University. Provide concise, accurate responses in markdown format with headers, lists, and code blocks where appropriate. Do not mention Google or other AI providers.`;
+          const conversationContext = getConversationContext();
+          let fullPrompt;
+          if (isDeepSearch) {
+            fullPrompt = `${systemPrompt}\n\n### Deep Search Mode\nPerform an iterative web search for the query: "${input}". Provide a comprehensive response with the most relevant and up-to-date information, formatted with a header "**Deep Search Results**".\n\n### Conversation History\n${conversationContext}\n### Current Prompt\nUser: ${input}`;
+          } else {
+            fullPrompt = conversationContext
+              ? `${systemPrompt}\n\n### Conversation History\n${conversationContext}\n### Current Prompt\nUser: ${input}`
+              : `${systemPrompt}\n\n### Current Prompt\nUser: ${input}`;
+          }
+
+          const response = await fetch(`${API_ENDPOINT}?key=${API_KEY}`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+              contents: [{ role: 'user', parts: [{ text: fullPrompt }] }],
+              generationConfig: {
+                temperature: isDeepSearch ? 0.9 : 0.7,
+                topK: 40,
+                topP: 0.95,
+                maxOutputTokens: 1024
+              },
+              safetySettings: [
+                { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
+                { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_MEDIUM_AND_ABOVE" }
+              ]
+            })
+          });
+
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(`API error: ${errorData.error?.message || response.statusText}`);
+          }
+
+          const data = await response.json();
+          if (data.promptFeedback && data.promptFeedback.blockReason) {
+            throw new Error(`Prompt blocked: ${data.promptFeedback.blockReason}`);
+          }
+
+          if (!data.candidates || !data.candidates[0]?.content?.parts?.[0]?.text) {
+            throw new Error('No response from API');
+          }
+
+          let responseContent = data.candidates[0].content.parts[0].text;
+          if (input.toLowerCase().includes('who created you') || input.toLowerCase().includes('who made you')) {
+            responseContent = `### Creator\n\nI am Danvil AI, created by Danvil, a student at MUST University.`;
+          } else if (isDeepSearch) {
+            responseContent = `**Deep Search Results**\n\n${responseContent}`;
+          }
+
+          cache.set(cacheKey, responseContent);
+          loadingDiv.remove();
+          await typeMessage(aiMessageDiv, responseContent);
+          break;
+        } catch (error) {
+          attempts++;
+          console.error(`Attempt ${attempts} failed:`, error);
+          if (attempts > MAX_RETRIES) {
+            loadingDiv.remove();
+            await typeMessage(aiMessageDiv, `Yikes, ran into a snag: ${error.message}. Try again, my curious friend!`);
+          }
+          await new Promise(resolve => setTimeout(resolve, 1000 * Math.pow(2, attempts)));
+        } finally {
+          sendButton.disabled = false;
+          webSearchButton.disabled = false;
+          voiceButton.disabled = !('SpeechRecognition' in window || 'webkitSpeechRecognition' in window);
+        }
+      }
+    }
+
+    // Auto-resize textarea
+    userInput.addEventListener('input', function () {
+      this.style.height = 'auto';
+      this.style.height = `${Math.min(this.scrollHeight, 150)}px`;
+      
+      if (this.value.length > MAX_INPUT_LENGTH) {
+        errorMessage.style.display = 'block';
+        errorMessage.textContent = `Input is too long (max ${MAX_INPUT_LENGTH} characters).`;
+      } else {
+        errorMessage.style.display = 'none';
+      }
+    });
+  </script>
 </body>
 </html>
